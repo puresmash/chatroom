@@ -3,6 +3,7 @@ const session = require('express-session');
 const http = require('http');
 const url = require('url');
 const WebSocket = require('ws');
+const helper = require('./wsHelper');
 
 const userList = new Map([['admin', null]]);
 
@@ -20,53 +21,12 @@ app.use((req, res, next)=>{
   next()
 })
 
-// app.use(express.static('public'));
 const sessionParser = session({
   saveUninitialized: false,
   secret: '$eCuRiTy',
   resave: false
 });
 app.use(sessionParser);
-
-
-// app.use(function (req, res) {
-//   res.send({ msg: "hello" });
-// });
-
-const login = (nickname, req, res) => {
-  userList.set(nickname, null);
-  req.session.nickname = nickname;
-  res.send({ result: 'success' });
-}
-
-const logout = (ws, req, message) => {
-  const { nickname } = req.session;
-  message = message || `${nickname} was disconnected due to inactivity`;
-
-  broadcast(message, () => {
-    req.session.destroy();
-    ws.terminate();
-    userList.delete(nickname);
-    console.log('delete nickname')
-  });
-}
-
-app.get('/login/:nickname', (req, res) => {
-  const { nickname } = req.params;
-  console.log(nickname)
-  if(userList.has(nickname)){
-    res.send({
-      result: 'failed',
-      errorMsg: `Nickname ${nickname} is already taken`
-    });
-  }
-  login(nickname, req, res);
-})
-
-app.get('/logout', (req, res) => {
-  const nickname = req.session.nickname;
-  logout(userList.get(nickname), req, `${req.session.nickname} left the chat, connection lost`);
-})
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({
@@ -85,27 +45,21 @@ const wss = new WebSocket.Server({
   server
 });
 
-const broadcast = (data, cb) => {
-  // Broadcast to everyone else.
-  wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(data);
-    }
-  });
-  if(cb) cb();
-}
+const { broadcast, logout } = helper(wss, userList);
 
-
+app.use(require('./controllers/wsController.js')(wss, userList));
 
 wss.on('connection', function connection(ws, req) {
   let timeoutID = setTimeout(() => logout(ws, req), MAX_IDLE);
   const nickname = req.session.nickname;
   ws.nickname = nickname;
+  ws.timeoutID = timeoutID;
   userList.set(nickname, ws);
   ws.on('message', function incoming(message) {
     // reset
     clearTimeout(timeoutID);
     timeoutID = setTimeout(() => logout(ws, req), MAX_IDLE);
+    ws.timeoutID = timeoutID;
     let json = null;
     try{
       json = JSON.parse(message);
