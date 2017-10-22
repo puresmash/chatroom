@@ -4,11 +4,12 @@ const http = require('http');
 const url = require('url');
 const WebSocket = require('ws');
 const helper = require('./wsHelper');
+const config = require('./config.json');
 
 const userList = new Map([['admin', null]]);
 
 const app = express();
-const MAX_IDLE = 30 * 1000;
+const MAX_IDLE = config.MAX_IDLE * 1000;
 
 /**
  * CORS
