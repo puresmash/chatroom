@@ -10,7 +10,11 @@ class Room extends Component {
       messageList: []
     };
   }
-
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.messageList !== this.state.messageList) {
+      this.editorWrap.scrollTop = this.editorWrap.scrollHeight;
+    }
+  }
   componentDidMount () {
     const { ws } = this.props;
     ws.onopen = () => {
@@ -78,12 +82,12 @@ class Room extends Component {
           this.sendMessage();
         }
       }}>
-        <div style={{ border: '1px solid lightseagreen' }}>
+        <div className="room" style={{ border: '1px solid lightseagreen' }}>
           <div style={{ padding: '16px', backgroundColor: 'lightseagreen' }}>
             <h2 style={{ margin: 0 }}>{this.props.nickname}</h2>
             <button type="button" onClick={this.logout}>Logout</button>
           </div>
-          <div className="editor">
+          <div ref={(wrap) => this.editorWrap = wrap} className="editor" style={{ flex: 1 }}>
             {this.renderMessageList()}
           </div>
           <div style={{ display: 'flex' }}>
