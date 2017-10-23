@@ -12,7 +12,7 @@ class Room extends Component {
   }
   componentDidUpdate(prevProps, prevState) {
     if(prevState.messageList !== this.state.messageList) {
-      this.editorWrap.scrollTop = this.editorWrap.scrollHeight;
+      this.chatWrap.scrollTop = this.chatWrap.scrollHeight;
     }
   }
   componentDidMount () {
@@ -85,16 +85,16 @@ class Room extends Component {
         <div className="room" style={{ border: '1px solid lightseagreen' }}>
           <div style={{ padding: '16px', backgroundColor: 'lightseagreen' }}>
             <h2 style={{ margin: 0 }}>{this.props.nickname}</h2>
-            <button type="button" onClick={this.logout}>Logout</button>
+            <button type="button" className="btn" onClick={this.logout}>Logout</button>
           </div>
-          <div ref={(wrap) => this.editorWrap = wrap} className="editor" style={{ flex: 1 }}>
+          <div ref={(wrap) => this.chatWrap = wrap} className="chat-content" style={{ flex: 1 }}>
             {this.renderMessageList()}
           </div>
-          <div style={{ display: 'flex' }}>
+          <div className="editor-wrapper">
             <input className="input" type="text" value={this.state.text}
               onChange={e => this.setState({ text: e.target.value })}
             />
-            <button type="submit">
+            <button type="submit" className="btn">
               Send
             </button>
           </div>

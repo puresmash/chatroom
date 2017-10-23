@@ -28,6 +28,14 @@
 }
 
 /* cutomized */
+.btn {
+  min-width: 64px;
+  height: 36px;
+  padding: 8px;
+  margin: 8px 0 8px 0;
+  cursor: pointer;
+}
+
 .input {
   width: 100%;
   min-height: 24px;
@@ -40,9 +48,10 @@
   /*margin-bottom: 1em;*/
   box-shadow: inset 0px 1px 8px -3px #ABABAB;
   background: #fefefe;
+  margin: 8px 0 8px 0;
 }
 
-.editor {
+.chat-content {
   min-height: 150px;
   max-height: 500px;
   /*background: lightgray;*/
@@ -57,9 +66,17 @@
   overflow-y: scroll;
 }
 
+.editor-wrapper {
+  display: flex;
+  border-width: 0 0 1px 0;
+  border-color: lightgray;
+  border-style: solid;
+}
+
 .modal-row {
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 .login-modal {
@@ -116,6 +133,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.error-msg {
+  margin-left: 8px;
+  color: red;
 }
 
 /* ROOM */

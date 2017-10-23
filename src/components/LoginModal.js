@@ -41,7 +41,7 @@ class LoginModal extends Component {
           />
           <FinishButton type="submit" label="Sign in" iconClass="fa fa-sign-in"/>
         </Row>
-        <span>{ this.state.errorMsg }</span>
+        <span className="error-msg">{ this.state.errorMsg }</span>
       </form>
     );
   }
