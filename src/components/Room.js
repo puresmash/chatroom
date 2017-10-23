@@ -82,22 +82,22 @@ class Room extends Component {
           this.sendMessage();
         }
       }}>
-        <div className="room" style={{ border: '1px solid lightseagreen' }}>
-          <div style={{ padding: '16px', backgroundColor: 'lightseagreen' }}>
-            <h2 style={{ margin: 0 }}>{this.props.nickname}</h2>
+        <div className="room" style={{ border: '1px solid #00AA8D' }}>
+          <header style={{ padding: '16px', backgroundColor: '#00AA8D' }}>
+            <h2 style={{ margin: 0, color: 'white' }}>{this.props.nickname}</h2>
             <button type="button" className="btn" onClick={this.logout}>Logout</button>
-          </div>
+          </header>
           <div ref={(wrap) => this.chatWrap = wrap} className="chat-content" style={{ flex: 1 }}>
             {this.renderMessageList()}
           </div>
-          <div className="editor-wrapper">
+          <footer className="editor-wrapper">
             <input className="input" type="text" value={this.state.text}
               onChange={e => this.setState({ text: e.target.value })}
             />
             <button type="submit" className="btn">
               Send
             </button>
-          </div>
+          </footer>
         </div>
       </form>
     );

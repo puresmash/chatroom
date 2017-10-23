@@ -54,7 +54,7 @@
 .chat-content {
   min-height: 150px;
   max-height: 500px;
-  /*background: lightgray;*/
+  border-color: #00AA8D;
   box-sizing: border-box;
   border: 1px solid #ddd;
   /*cursor: text;*/
@@ -69,7 +69,7 @@
 .editor-wrapper {
   display: flex;
   border-width: 0 0 1px 0;
-  border-color: lightgray;
+  border-color: #00AA8D;
   border-style: solid;
 }
 
