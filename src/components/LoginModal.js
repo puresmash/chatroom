@@ -10,12 +10,35 @@ class LoginModal extends Component {
       nickname: ''
     };
   }
-  login = () => {
-    const { nickname } = this.state;
-    fetch(`http://${window.location.hostname}:8080/login/${nickname}`, { credentials: 'include' })
+
+  componentDidMount = () => {
+    this.recover();
+  }
+
+  recover = () => {
+    fetch(`http://${window.location.hostname}:8080/recover`, { credentials: 'include' })
     .then(res => res.json())
     .then(json => {
-      const { result, errorMsg } = json;
+      if(json.nickname){
+        this.setState({ nickname: json.nickname });
+        this.props.onSuccess(json.nickname);
+      }
+    })
+  }
+
+  login = () => {
+    const { nickname } = this.state;
+    if(nickname.length === 0) return;
+
+    fetch(`http://${window.location.hostname}:8080/login/`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ nickname })
+    })
+    .then(res => res.json())
+    .then(json => {
+      const { result, nickname, errorMsg } = json;
       console.log(json)
       if(result === 'success') {
         console.log('Successful login with ' + nickname)

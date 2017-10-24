@@ -16,7 +16,6 @@ class App extends Component {
   }
 
   componentDidMount () {
-
   }
 
   createConnection = () => {
@@ -37,8 +36,8 @@ class App extends Component {
         {
           !ws &&
           <LoginModal onSuccess={(nickname) => {
-            this.createConnection();
             this.setState({ nickname });
+            this.createConnection();
           }}/>
         }
         {ws && <Room ws={ws} nickname={nickname}/>}

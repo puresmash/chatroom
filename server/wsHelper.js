@@ -12,15 +12,17 @@ module.exports = (wss, userList) => {
     });
     if(cb) cb();
   };
-  const logout = (ws, req, message) => {
-    const { nickname } = req.session;
+  const logout = (nickname, req, message) => {
     message = message || `${nickname} was disconnected due to inactivity`;
 
     broadcast(message, () => {
       req.session.destroy();
-      ws.terminate();
-      clearTimeout(ws.timeoutID);
+      const { wsAry } = userList.get(nickname);
       userList.delete(nickname);
+      wsAry.forEach(ws => {
+        clearTimeout(ws.timeoutID);
+        ws.terminate();
+      })
       console.log(`delete ${nickname}`);
     });
   };
